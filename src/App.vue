@@ -1,32 +1,49 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <headeR />
+    <router-view />
   </div>
 </template>
 
+<script>
+import headeR from '@/components/header.vue'
+
+export default {
+
+  components: {
+    headeR
+  },
+
+  beforeCreate() {
+    let status = localStorage.getItem("iwouldliketoask")
+
+    if(status != null) {
+      status = JSON.parse(status)
+
+      if(status.stage == 0) {
+        this.$router.push("/survey")
+      } else if(status.stage ==1) {
+        this.$router.push("/done")
+      }
+    }
+  }
+
+
+}
+</script>
+
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+body {
+  background-color: #575757;
+  color: #ffffff;
 }
 </style>
