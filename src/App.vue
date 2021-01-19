@@ -45,5 +45,8 @@ export default {
 body {
   background-color: #575757;
   color: #ffffff;
+  max-width: 1366px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

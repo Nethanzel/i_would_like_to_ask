@@ -2,7 +2,9 @@
   <div class="survey">
     <h1>Por favor conteste con honestidad</h1>
 
-    <div id="nav" v-on:click="done()">
+      <questions />
+
+    <div id="nav" v-on:click="done()" v-if="finished">
         <span class="r_link">Finalizar</span>
     </div>
 
@@ -11,9 +13,21 @@
 
 <script>
 
+import questions from '@/components/Questions.vue'
+
 export default {
   name: "survey",
   title: "I would like to ask...",
+
+  components: {
+    questions
+  },
+
+  data() {
+    return {
+      finished: false
+    }
+  },
 
   beforeCreate() {
     let status = localStorage.getItem("iwouldliketoask")
@@ -41,9 +55,14 @@ export default {
 
 @media only screen and (max-width: 750px) {
   .survey {
-    height: auto;
     cursor: default;
     padding-top: 9.5vh;
+    height: 90.5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -9vh;
   }
 
   h1 {
@@ -78,9 +97,14 @@ export default {
 
 @media only screen and (min-width: 751px) {
   .survey {
-    height: auto;
+    height: 92.5vh;
     cursor: default;
     padding-top: 7.5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -7vh;
   }
 
   h1 {
@@ -103,7 +127,7 @@ export default {
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 19px;
   }
 
     #nav .r_link:hover {

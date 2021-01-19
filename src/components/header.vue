@@ -36,7 +36,6 @@
     position: fixed;
     top: 0;
     background: #474747;
-
     display: flex;
   }
 
@@ -50,7 +49,7 @@
 
   #branding {
     height: 8.5vh;
-    margin-top: 3px;
+    margin-top: 2px;
     margin-left: 3px;
     align-self: flex-start;
     display: inline-block;
@@ -63,7 +62,7 @@
     width: auto;
     display: flex;
     align-items: center;
-    padding: 5px 10px;
+    padding: 1px 3px;
 
   } 
   
@@ -83,15 +82,15 @@
     border-radius: 50%;
   }
 
-  .icon:hover #prob {
+  .icon:active #prob {
     background: #c47171;
   }
 
-  .icon:hover #info {
+  .icon:active #info {
     background: #79c471;
   }
 
-  .icon:hover {
+  .icon:active {
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -113,6 +112,7 @@
     top: 0;
     background: #474747;
     display: flex;
+    max-width: 1366px;
 
   }
 
