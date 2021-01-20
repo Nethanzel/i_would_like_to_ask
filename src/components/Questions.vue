@@ -32,7 +32,7 @@ export default {
             currentQuestion: "",
             questionCollection: [
                 {
-                    question: "Se verá bien en los navegadores más modernos, aunque en versiones anteriores era una propiedad no estándar con prefijo, así que si queremos que funcione en versiones anteriores de firefox, chrome, opera o safari deberíamos incluir los códigos con prefijos, aunque de aquí a unos años con el código superior sería suficiente, actualmente si es recomendable incluir:",
+                    question: "Question #1",
                     answers: ["Si", "No", "No sé"],
                     type: "multi",
                     img: true,
