@@ -1,6 +1,9 @@
 <template>
     <div id="done">
-        <h1>¡Has participado! Gracias por tu ayuda.</h1>
+        <h1>¡Ya has colaborado! Gracias por tu ayuda.</h1>
+        <p>Si quieres seguir aportando, por favor pidele a tus amgios que tambien participen.</p>
+        <p>Si quieres ver el progreso de la recoleccion de datos, <router-link to="/overview" class="link">aqui
+        </router-link> podras ver un resumen.</p>
     </div>
 </template>
 
@@ -25,6 +28,11 @@ export default {
 
 <style scoped>
 
+a {
+    text-decoration: none;
+    color: #79c471;
+}
+
 @media only screen and (max-width: 750px) {
 
     #done {
@@ -36,17 +44,27 @@ export default {
     h1 {
         text-align: center;
     }
+
+    p{
+        text-align: center;
+        font-size: 17px;
+    }
 }
 
 @media only screen and (min-width: 751px) {
     #done {
         height: auto;
         cursor: default;
-        padding-top: 7.5vh;
+        padding-top: 9.5vh;
     }
 
     h1 {
         text-align: center;
+    }
+
+    p{
+        text-align: center;
+        font-size: 19px;
     }
 }
 

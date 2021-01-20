@@ -6,8 +6,9 @@
       <h3>Envia un reporte</h3>
       <form action="">
           <h2>Reportar fallos</h2>
-          <label for="donde">¿Donde fallo la aplicacion? (poner el link)</label> <input type="url" id="donde"> <br>
-          <label for="desc">Agrega una pequeña descripcion: </label> <input type="text" aria-multiline="true" id="desc"> <br>
+          <label for="donde">¿Donde fallo la aplicacion? (poner el link)</label> <input type="url" id="donde"> 
+          <label for="desc">Agrega una pequeña descripcion: </label>
+          <textarea cols="40" rows="5" id="desc"></textarea>
           <label for="capt">Agrega alguna captura: </label> <input type="file" accept="image/*" multiple id="capt">
       </form>
 
@@ -38,13 +39,11 @@
 
   form {
     margin: 10px 10px;
-    padding: 10px 5px 15px 5px;
+    padding: 10px 10px 15px 10px;
     border-radius: 5px;
     background: #858484;
-  }
-
-  form > *{
-    margin: 5px 5px 15px 5px;
+    display: flex;
+    flex-direction: column;
   }
 
   h2 {
@@ -54,10 +53,36 @@
 
   input[type=text]:focus {
     outline: none;
+    margin-bottom: 10px;
+  }
+
+  textarea:focus {
+    outline: none;
+    margin-bottom: 10px;
   }
 
   input[type=url]:focus {
     outline: none;
+    margin-bottom: 10px;
+  }
+
+  input[type=text] {
+    outline: none;
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    outline: none;
+    margin-bottom: 10px;
+    max-width: 100%;
+    max-height: 160px;
+    min-width: 200px;
+    min-height: 50px;
+  }
+
+  input[type=url] {
+    outline: none;
+    margin-bottom: 10px;
   }
 
 }
@@ -84,16 +109,14 @@
   }
 
    form {
-    max-width: 600px;
+    min-width: 600px;
     align-self: center;
     margin: 10px 10px;
-    padding: 15px 5px 15px 5px;
+    padding: 15px 10px 15px 10px;
     border-radius: 5px;
     background: #858484;
-  }
-
-  form > *{
-    margin: 5px 5px 15px 5px;
+    display: flex;
+    flex-direction: column;
   }
 
   h2 {
@@ -103,10 +126,36 @@
 
   input[type=text]:focus {
     outline: none;
+    margin-bottom: 10px;
+  }
+
+  textarea:focus {
+    outline: none;
+    margin-bottom: 10px;
   }
 
   input[type=url]:focus {
     outline: none;
+    margin-bottom: 10px;
+  }
+
+  input[type=text] {
+    outline: none;
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    outline: none;
+    margin-bottom: 10px;
+    max-width: 600px;
+    min-width: 600px;
+    max-height: 200px;
+    min-height: 50px;
+  }
+
+  input[type=url] {
+    outline: none;
+    margin-bottom: 10px;
   }
 
 

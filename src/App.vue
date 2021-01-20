@@ -9,11 +9,12 @@
 import headeR from '@/components/header.vue'
 
 export default {
+  title: "I would like to ask...",
 
   components: {
     headeR
   },
-
+/*
   beforeCreate() {
     let status = localStorage.getItem("iwouldliketoask")
 
@@ -27,7 +28,7 @@ export default {
       }
     }
   }
-
+*/
 
 }
 </script>
