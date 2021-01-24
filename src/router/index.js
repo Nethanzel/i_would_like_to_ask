@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/survey',
-    name: 'Encuesta',
+    name: 'Survey',
     component: () => import('../views/Survey.vue')
   },
   {
@@ -33,6 +33,10 @@ const routes = [
     path: '/overview',
     name: 'Overview',
     component: () => import('../views/Overview.vue')
+  },
+  {
+    path: '*',
+    component: () => import('../views/PNF.vue')
   }
 ]
 
@@ -43,7 +47,6 @@ const router = new VueRouter({
   scrollBehavior () {
     return { x: 0, y: 0 }
   }
-  
 })
 
 export default router
