@@ -1,8 +1,8 @@
 <template>
     <div id="control">
 
-        <div id="back">
-            <span v-on:click="goBack()">{{char_01}}</span>
+        <div id="back" v-on:click="goBack()">
+            <span>{{char_01}}</span>
         </div>
 
         <div id="view">
@@ -16,44 +16,23 @@
             </div>
         </div>
 
-        <div id="next">
-            <span v-on:click="goNext()">></span>
+        <div id="next" v-on:click="goNext()">
+            <span>></span>
         </div>
 
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: "Questions",
     data() {
         return {
             char_01: "<",
             currentQuestion: "",
-            questionCollection: [
-                {
-                    question: "Question #1",
-                    answers: ["Si", "No", "No sé"],
-                    type: "multi",
-                    img: true,
-                    uri: "https://dia8publicidad.com/wp-content/uploads/2020/05/Imagen-redes-01.jpg"
-                },
-                {
-                    question: "Question #2",
-                    answers: ["Si", "No", "No sé"],
-                    type: "text",
-                    img: true,
-                    uri: "https://www.eluniversal.com.mx/sites/default/files/2020/03/19/como_extraer_un_texto_de_una_imagen.jpg"
-                },
-                {
-                    question: "Question #3",
-                    answers: ["Si", "No", "No sé"],
-                    type: "pick",
-                    img: false
-                }
-                
-            ], //array of objects
-
+            questionCollection: undefined, //array of objects
             pos: 0,
             type: ""
         }
@@ -75,6 +54,7 @@ export default {
                 this.renderAnswer( this.questionCollection[calcPos].answers,  this.questionCollection[calcPos].type)
                 this.rederImg(this.questionCollection[calcPos])
             }
+            this.determineEnd()
         },
 
         goBack () {
@@ -91,7 +71,8 @@ export default {
                 this.currentQuestion = this.questionCollection[calcPos].question
                 this.renderAnswer( this.questionCollection[calcPos].answers,  this.questionCollection[calcPos].type)
                 this.rederImg(this.questionCollection[calcPos])
-            } 
+            }
+            this.determineEnd()
         },
 
         renderAnswer (questionAnswers, type) {
@@ -101,6 +82,8 @@ export default {
             if(type == "pick") {
                 answersView.style.paddingLeft = "20px"
                 answersView.innerHTML = ""
+                answersView.style.display = "block"
+
                 for(let i = 0; i < questionAnswers.length; i++) {
                     let option = `
                         <input type="radio" name="option" id="option${i}" value="${questionAnswers[i]}" style="margin: 7px 5px;"> 
@@ -111,6 +94,8 @@ export default {
             } else if(type == "multi") {
                 answersView.style.paddingLeft = "20px"
                 answersView.innerHTML = ""
+                answersView.style.display = "block"
+
                 for(let i = 0; i < questionAnswers.length; i++) {
                     let option = `
                         <input type="checkbox" name="option" id="option${i}" value="${questionAnswers[i]}" style="margin: 7px 5px;"> 
@@ -119,6 +104,32 @@ export default {
                     answersView.innerHTML += option
                 }
                 answersView.innerHTML += '<p style="margin: 7px 5px;">(Puedes elegir más de una)</p>'
+            } else if(type == "text"){
+                answersView.style.paddingLeft = "0px"
+                answersView.innerHTML = ""
+                answersView.style.display = "flex"
+
+                let option = `
+                        <textarea id="textarea" name="option" placeholder="Escriba su respuesta."></textarea>
+                    `
+                    answersView.innerHTML += option
+
+            } else if(type == "select"){
+                answersView.style.paddingLeft = "20px"
+                answersView.innerHTML = ""
+                answersView.style.display = "flex"
+
+                let option = `
+                        <select id="select" name="option" placeholder="Escriba su respuesta.">
+                        <option value="" disabled selected>Seleccione...</option>
+                    `
+                for(let i = 0; i < questionAnswers.length; i++) {
+                    option += `
+                    <option value="${questionAnswers[i]}">${questionAnswers[i]}</option>
+                    `
+                }
+                    answersView.innerHTML += option + "</select>"
+
             } else {
                 answersView.style.paddingLeft = "0px"
                 answersView.innerHTML = ""
@@ -135,7 +146,6 @@ export default {
                 imgview.src = ""
                 imgview.style.display = "none"
             }
-
         },
 
         saveAnswer() {
@@ -157,46 +167,168 @@ export default {
                     answer,
                     pos: this.pos
                 }
+
+                if(answer.length == 0) {
+                    return null
+                }
+
+                this.storageResutls(questionResult) //Value to save as an answered question
+
+            } else if(this.type == "text") {
+
+                let question  = ""
+                let text = document.getElementById("textarea")
+                let answer = [text.value]
+
+                question = this.currentQuestion //here you catch the question
+
+                let questionResult = {
+                    question,
+                    answer,
+                    pos: this.pos
+                }
+
+                if(answer[0].length == 0) {
+                    return null
+                }
+
+                this.storageResutls(questionResult) //Value to save as an answered question
+            } else if(this.type == "select") {
+
+                let question  = ""
+                let slect = document.getElementById("select")
+                let answer = [slect.value]
+
+                question = this.currentQuestion //here you catch the question
+
+                let questionResult = {
+                    question,
+                    answer,
+                    pos: this.pos
+                }
+
+                if(answer[0] == "") {
+                    return null
+                }
+
                 this.storageResutls(questionResult) //Value to save as an answered question
             }
         },
 
         storageResutls(value) {
+            let exists = this.validateAnswers(value)
             let storage = localStorage.getItem("questionStorage")
-
-            if(storage != null) {
-                storage = JSON.parse(storage)
-                storage.questions.push(value)
-                localStorage.setItem("questionStorage", JSON.stringify(storage))
+             if(storage != null) {
+                if(!exists) {
+                    storage = JSON.parse(storage)
+                    storage.questions.push(value)
+                    localStorage.setItem("questionStorage", JSON.stringify(storage))
+                }
             } else {
                 localStorage.setItem("questionStorage", JSON.stringify({questions: []}))
                 this.storageResutls(value)
             }
+        },
+
+        loadQuestions() {
+            let token = this.clienttoken()
+
+            axios.get("/api/questions", {headers: {"token": token}})
+
+            .then(res => {
+                this.questionCollection = res.data.data
+                this.$emit("count", this.questionCollection.length)
+                this.dataLoaded()
+            })
+            .catch((err) => {
+                let e = String(err).toLowerCase()
+                if(e.includes("network error")) {
+                    this.messageBox("Servidor fuera de alcance.", 2)
+                } else if (e.includes("code 401")) {
+                    this.messageBox("Atenticación requerida o invalida.", 0)
+                } else if (e.includes("code 404")) {
+                    this.messageBox("Solictud invalida.", 0)
+                } else if(e.includes("code 500")) {
+                    this.messageBox("Estamos teniendo algunos problemas con el servidor.", 2)
+                } else {
+                 this.messageBox("Error desconocido.", 0)
+                }
+            })
+        },
+
+        validateAnswers(newAnser) {
+            let storage = localStorage.getItem("questionStorage")
+            if(storage != null) {
+                storage = JSON.parse(storage)
+                let answers = storage.questions
+
+                for(let i = 0; i < answers.length; i++) {
+                    if(newAnser.question == answers[i].question){
+
+                        if(confirm("Ya habias respondido esta, ¿quieres guardar la nueva respuesta?")) {
+                            let vStorage = storage
+                            vStorage.questions.splice(i, 1)
+                            localStorage.setItem("questionStorage", JSON.stringify(vStorage))
+                            return false
+                        } else return true
+                    }
+                }
+                return false
+            }
+        },
+
+        determineEnd() {
+            let storage = localStorage.getItem("questionStorage")
+            if(storage != null) {
+                storage = JSON.parse(storage)
+                let answers = storage.questions
+
+                if(answers.length == this.questionCollection.length) {
+                    this.$emit("finished", true)
+                } else {
+                    this.$emit("finished", false)
+                }
+            }
+        },
+        dataLoaded() {
+            this.currentQuestion = this.questionCollection[0].question
+            this.renderAnswer(this.questionCollection[0].answers, this.questionCollection[0].type)
+            this.rederImg(this.questionCollection[0])
+
+            let image = document.getElementById("viewImg")
+            image.addEventListener("click", (e) => {
+                let uri = e.target.getAttribute("src")
+                this.$emit("view", uri)
+            })
+            this.determineEnd()
+            this.$emit("count", this.questionCollection.length)
         }
     },
 
     mounted () {
-        let Pos = 0
-        this.currentQuestion = this.questionCollection[Pos].question
-        this.renderAnswer(this.questionCollection[Pos].answers, this.questionCollection[Pos].type)
-        this.rederImg(this.questionCollection[Pos])
-
-        let image = document.getElementById("viewImg")
-
-        image.addEventListener("click", (e) => {
-            let uri = e.target.getAttribute("src")
-            this.$emit("view", uri)
-        })
+        this.loadQuestions()
     }
 }
 </script>
 
-<style scoped>
+<style>
 
 #viewImg {
     max-width: 25vw;
     margin-bottom: 15px; 
     display: none;
+}
+
+#textarea {
+    padding: 5px;
+    color: #000;
+    resize: none;
+    outline: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media only screen and (min-width: 751px) {
@@ -207,6 +339,8 @@ export default {
         margin: 5px 10px 5px 10px;
         height: auto;
         max-height: 650px;
+
+        transition: .5s,;
     }
 
     #next {
@@ -273,6 +407,17 @@ export default {
         justify-content: center;*/
         width: 100%;
     }
+
+    #textarea {
+        font-size: 17px;
+        font-family: monospace;
+        height: 100px;
+        width: 90%;
+    }
+
+    #select {
+        font-size: 17px;;
+    }
 }
 
 @media only screen and (max-width: 750px) {
@@ -285,6 +430,8 @@ export default {
         height: auto;
         padding: 0 5px;
         min-width: 300px;
+
+        transition: .5s;
     }
 
     #next {
@@ -330,8 +477,9 @@ export default {
         align-items: center;
         padding: 10px 5px;
         width: 100%;
+        min-width: 55vw;
     }
-
+ 
     #question {
         display: block;
         padding: 15px 0;
@@ -348,8 +496,16 @@ export default {
         width: 100%;
     }
 
+    #textarea {
+        font-size: 17px;
+        height: 75px;
+        width: 100%;
+    }
+
+    #select {
+        font-size: 17px;
+        width: 100%;
+    }
+
 }
-
-
-
 </style>

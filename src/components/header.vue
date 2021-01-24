@@ -1,28 +1,44 @@
 <template>
-  <div class="header">
-    <img src="../assets/iWouldLike2.svg" alt="branding" id="branding">
-
-    <div id="headerBtns">
-
-      <router-link to="/about" class="link">
-        <div class="icon">
-          <img src="../assets/info.svg" alt="info" id="info"> 
-          <span class="tag"> Saber mas</span>
-        </div>
+  <div>
+    <div class="header">
+      <router-link :to="{name:'Home'}">
+        <img src="../assets/iWouldLike2.svg" alt="branding" id="branding">
       </router-link>
 
-      <router-link to="/report" class="link">
-        <div class="icon">
-          <img src="../assets/problem.svg" alt="problem" id="prob"> 
-          <span class="tag"> Reportar fallo</span>
-        </div>
-      </router-link>
+      <div id="headerBtns">
+
+        <router-link :to="{name: 'About'}" class="link">
+          <div class="icon">
+            <img src="../assets/info.svg" alt="info" id="info"> 
+            <span class="tag"> Saber mas</span>
+          </div>
+        </router-link>
+
+        <router-link :to="{name: 'Report'}" class="link">
+          <div class="icon">
+            <img src="../assets/problem.svg" alt="problem" id="prob"> 
+            <span class="tag"> Reportar fallo</span>
+          </div>
+        </router-link>
+      </div>
     </div>
-
+    <div id="messageBand">
+      <p id="messageBand_text"></p>
+    </div>
   </div>
 </template>
 
 <style>
+
+  #messageBand p {
+    font-weight: bold;
+    color: #000;
+  }
+
+  .header {
+      z-index: 5;
+  }
+
 
 .link {
   text-decoration: none;
@@ -45,6 +61,7 @@
     justify-content: flex-end;
     margin-top: auto;
     margin-bottom: auto;
+    padding-right: 5px;
   }
 
   #branding {
@@ -101,6 +118,23 @@
   .tag {
     display: none;
   }
+
+  #messageBand p {
+    font-size: 15px;
+  }
+
+  #messageBand {
+  height: 0px;
+  width: 100%;
+  top: 9vh;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
+  z-index: 1;
+  overflow: hidden;
+}
 }
 
 @media only screen and (min-width: 751px) {
@@ -122,6 +156,7 @@
     justify-content: flex-end;
     margin-top: auto;
     margin-bottom: auto;
+    padding-right: 15px;
   }
 
   #branding {
@@ -181,6 +216,24 @@
     margin-left: 5px;
     font-size: 14px;
   }
+
+  #messageBand p {
+    font-size: 17px;
+  }
+
+  #messageBand {
+  height: 0px;
+  width: 100%;
+  max-width: 1366px;
+  top: 7.3vh;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
+  z-index: 1;
+  overflow: hidden;
+}
 }
 
 
