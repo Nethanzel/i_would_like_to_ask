@@ -2,7 +2,7 @@
 
 Survey front end project. Made for personal porpuses but you can use it as you want!
 
-# Powered by VueJS
+### Powered by VueJS
 
 ## Project setup
 ```
