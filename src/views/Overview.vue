@@ -4,10 +4,11 @@
         <p>En términos generales, el estado del proyecto se podria resumir en el siguiente gráfico, donde 
           <span id="reached">■</span> representa el alcance logrado y <span id="rest">■</span> representa lo que falta por lograr.</p>
         <cirChart :styles="cirChartStyles" v-bind:progress="summary[0]" />
-        <p>Siendo un poco más especifico, el objectivo es alcanzar <strong>{{max}} personas</strong> en cada provincia del pais, aqui podras ver 
+        <p>Siendo un poco más especifico, el objectivo es alcanzar <strong>{{max}} personas</strong> en cada provincia del país, aqui podras ver 
           la evolución del alcance en cada lugar:
         </p>
         <barsChart :styles="barChartStyles" v-bind:data="summary[1]" />
+        <p>Esta información se actualizará cada 5 minutos.</p>
     </div>
 </template>
 
@@ -29,29 +30,8 @@ export default {
   },
 
   created() {
-
-    let token = this.clienttoken()
-
-    axios.get("/api/summary", {headers: {"token": token}})
-
-    .then(res => {
-      this.summary = res.data.data
-    })
-
-    .catch(err =>{
-      let e = String(err).toLowerCase()
-      if(e.includes("network error")) {
-          this.messageBox("Servidor fuera de alcance.", 2)
-      } else if (e.includes("code 401")) {
-          this.messageBox("Atenticación requerida o invalida.", 0)
-      } else if (e.includes("code 404")) {
-          this.messageBox("Solictud invalida.", 0)
-      } else if(e.includes("code 500")) {
-          this.messageBox("Estamos teniendo algunos problemas con el servidor.", 2)
-      } else {
-        this.messageBox("Error desconocido.", 0)
-      }
-    })
+    this.getData()
+    setInterval(() => {this.getData()}, 300000)
   },
 
    computed: {
@@ -80,10 +60,37 @@ export default {
 
     max() {
       try {
-         return this.summary[1][1]
+       if(this.summary[1][1][1]) {
+         return parseInt(this.summary[1][1][0])
+       }
+        return parseInt(this.summary[1][1][0])
       } catch (error) {
         return 0
       }
+    }
+   },
+   methods: {
+
+      getData() {
+        let token = this.clienttoken()
+        axios.get("/api/summary", {headers: {"token": token}})
+        .then(res => {
+          this.summary = res.data.data
+        })
+        .catch(err =>{
+          let e = String(err).toLowerCase()
+          if(e.includes("network error")) {
+              this.messageBox("Servidor fuera de alcance.", 2)
+          } else if (e.includes("code 401")) {
+              this.messageBox("Autenticación requerida o invalida.", 0)
+          } else if (e.includes("code 404")) {
+              this.messageBox("Solictud invalida.", 0)
+          } else if(e.includes("code 500")) {
+              this.messageBox("Estamos teniendo algunos problemas con el servidor.", 2)
+          } else {
+            this.messageBox("Error desconocido.", 0)
+          }
+        })
     }
    }
 }

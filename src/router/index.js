@@ -35,6 +35,11 @@ const routes = [
     component: () => import('../views/Overview.vue')
   },
   {
+    path: '/help',
+    name: 'Help',
+    component: () => import('../views/Help.vue')
+  },
+  {
     path: '*',
     component: () => import('../views/PNF.vue')
   }

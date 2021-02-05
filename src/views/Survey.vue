@@ -1,31 +1,34 @@
 <template>
-  <div class="survey">
-    <h1 v-if="!finished">Por favor contesta con honestidad.</h1>
-
+  <div id="appCont">
+    <div class="survey" v-if="access">
+      <h1 v-if="!finished">Por favor, contesta con honestidad.</h1>
       <questions v-on:view="showView($event)" v-on:finished="showSend($event)" v-on:count="setQuestionCount($event)" v-if="!finished" />
-      <p v-if="!finished">Tus respuesta son anonimas, no hay razón para estar preocupado por lo que consteste.</p>
-      <p v-if="!finished">Haz click en las imagenes para verlas en pantalla completa.</p>
+      <p id="topP" v-if="!finished">Tus respuesta son anonimas, no hay razón para estar preocupado por lo que consteste.</p>
+      <p v-if="!finished">Haz click en las imagenes (si aparence alguna) para verlas en pantalla completa.</p>
+
+      <img id="svSpin" src="../assets/spin.png">
 
       <div v-if="finished" id="finish">
         <div id="navC">
-          <h2>¡Has contestado todas las preguntas! Para enviar tus respuestas haz click en "finalizar".</h2>
-            <div id="nav" v-on:click="done()">
-                <span class="r_link">Finalizar</span>
+          <h2 id="choosen">Para enviar tus respuestas haz click en "enviar".</h2>
+          <p> Si quieres cambiar alguna respuesta, en la parte de "ver respuestas" podras borrar alguna y luego contestar de nuevo.</p>
+            <div class="nav" v-on:click="done()" id="done">
+                <span class="r_link">Enviar</span>
             </div>
 
-            <div id="nav" v-on:click="loadAnswers()">
-                <span class="r_link">Ver respuestas</span>
+            <div class="nav" v-on:click="loadAnswers()">
+              <span class="r_link">Ver respuestas</span>
             </div>
         </div>
 
         <div id="answersView"> </div>
-
       </div>
+    </div>
 
     <div id="superView">
       <img src="" id="superView_img">
     </div>
-
+    <img id="svSpinII" src="../assets/spin.png" v-if="!access">
   </div>
 </template>
 
@@ -46,33 +49,26 @@ export default {
     return {
       finished: false,
       questionCount: 0,
-
-    }
-  },
-
-  beforeCreate() {
-    let status = localStorage.getItem("iwouldliketoask")
-    if(status == null) {
-      this.$router.push({name: "Home"})
-    } else {
-      status = JSON.parse(status)
-      if(status.stage == 1) {
-        this.$router.push({name: "Done"})
-      }
+      access: false,
     }
   },
 
   methods: {
     done () {
+      let click = document.getElementById("done")
+      click.style.display = "none"
+      document.getElementById("svSpin").style.display = "block"
+      document.getElementById("choosen").innerText = "Tus respuestas se estan enviando..."
+
       let token = this.clienttoken()
       let data = new FormData
 
       let storage = localStorage.getItem("questionStorage")
       if(storage != null) {
         storage = JSON.parse(storage)
+        data.append("answers", JSON.stringify(storage.questions))
       }
 
-      data.append("answers", storage.questions)
       data.append("client", token)
       data.append("date", new Date())
 
@@ -81,17 +77,25 @@ export default {
       .then(res => {
         if(res.status == 204) {
           this.messageBox("Tus respuestas fueron enviadas!", 1)
-          localStorage.setItem("iwouldliketoask", JSON.stringify({ stage: 1, sent: new Date() }))
           this.$router.push({name: "Done"})
+          click.style.display = "flex"
+          document.getElementById("svSpin").style.display = "none"
+          document.getElementById("choosen").innerText = '¡Has contestado todas las preguntas! Para enviar tus respuestas haz click en "finalizar".'
         }
       })
 
       .catch((err) => {
+        click.style.display = "flex"
+        document.getElementById("svSpin").style.display = "none"
+        document.getElementById("choosen").innerText = '¡Has contestado todas las preguntas! Para enviar tus respuestas haz click en "finalizar".'
         let e = String(err).toLowerCase()
         if(e.includes("network error")) {
           this.messageBox("Servidor fuera de alcance.", 2)
         } else if (e.includes("code 401")) {
-          this.messageBox("Atenticación requerida o invalida.", 0)
+          this.messageBox("Autenticación requerida o invalida.", 0)
+        } else if (e.includes("code 403")) {
+          this.messageBox("Ya has participado.", 2)
+          this.$router.push({name: "Done"})
         } else if (e.includes("code 404")) {
           this.messageBox("Solictud invalida.", 0)
         } else if(e.includes("code 500")) {
@@ -189,21 +193,75 @@ export default {
 
     setQuestionCount (event) {
       this.questionCount = event
+      document.getElementById("svSpin").style.display = "none"
     }
   },
 
   mounted () {
     let superView = document.getElementById("superView")
-
     superView.addEventListener("click", (e) => {
       let target = e.target.getAttribute("id")
       if(target == "superView") {superView.style.transform = "scale(0)"}
     })
+
+    let token = this.clienttoken()
+    axios.get("/api", {headers: {token: token}})
+
+      .then(res => {
+        if(res.status == 204) {
+          this.access = true
+        }
+      })
+
+      .catch(err => {
+          let e = String(err).toLowerCase()
+          if(e.includes("network error")) {
+            this.messageBox("Servidor fuera de alcance.", 2)
+          } else if (e.includes("code 401")) {
+            this.messageBox("Ya has participado.", 2)
+            this.$router.push({name: "Done"})
+          } else if (e.includes("code 404")) {
+            this.messageBox("Solictud invalida.", 0)
+          } else if(e.includes("code 500")) {
+            this.messageBox("Estamos teniendo algunos problemas con el servidor.", 2)
+          } else {
+            this.messageBox("Error desconocido.", 0)
+          }
+      })
+
   }
+
+
 }
 </script>
 
 <style>
+
+#topP {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+@keyframes rotate360 {
+
+    to { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes rotate360 {
+
+    to { transform: rotate(360deg); }
+}
+
+#svSpin { 
+    animation: 1.5s rotate360 infinite linear; 
+    height: 40px;
+}
+
+
+#svSpinII { 
+    animation: 1.5s rotate360 infinite linear; 
+    height: 40px;
+}
 
 #superView {
   position: fixed;
@@ -282,20 +340,31 @@ export default {
   width: 10%;
 }
 
+p {
+  text-align: center;
+}
+
+#appCont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
 
 @media only screen and (max-width: 750px) {
   .survey {
     cursor: default;
     height: 100vh;
+    width: 97%;
     padding-top: 11vh;
     padding-bottom: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    padding-left: 5px;
-    padding-right: 5px;
-
+    margin-left: 5px;
+    margin-right: 5px;
   }
 
   .survey h1 {
@@ -308,7 +377,7 @@ export default {
     margin: 10px 0;
   }
 
-  .survey #nav {
+  .survey .nav {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -316,7 +385,7 @@ export default {
 
   }
 
-  .survey #nav .r_link {
+  .survey .nav .r_link {
     background: #79c471;
     padding: 10px 20px;
     border-bottom-left-radius: 5px;
@@ -329,7 +398,7 @@ export default {
     text-align: center;
   }
 
-  .survey #nav .r_link:active {
+  .survey .nav .r_link:active {
     background: #53ff78;
     color: #000
   }
@@ -372,18 +441,18 @@ export default {
   .survey #answersView {
     margin: 0 auto;
     padding: 10px 4px;
-    width: 95%;
+    width: 97%;
     max-width: 100%;
   }
 
   .survey .answerEl {
-    width: 90%;
+    width: 97%;
     padding: 4px 0 4px 4px;
   }
 
   .survey .qaView {
     padding: 2px 5px;
-    width: 80%;
+    width: 90%;
   }
 
   .survey #removeAns {
@@ -442,14 +511,14 @@ export default {
     margin: 0 10px;
   }
 
-  .survey #nav {
+  .survey .nav {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 30px 0 30px 0;
   }
 
-  .survey #nav .r_link {
+  .survey .nav .r_link {
     background: #79c471;
     padding: 10px 20px;
     border-bottom-left-radius: 5px;
@@ -462,7 +531,7 @@ export default {
     text-align: center;
   }
 
-  .survey #nav .r_link:hover {
+  .survey .nav .r_link:hover {
     background: #53ff78;
     color: #000
   }
@@ -522,7 +591,7 @@ export default {
     margin: 0 15px;
     margin: 0 auto;
     padding: 15px 5px;
-    width: 100%;
+    width: 600px;
     max-width: 740px;
   }
 

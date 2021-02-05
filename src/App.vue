@@ -27,7 +27,9 @@ export default {
 }
 
 body {
-  background-color: #575757;
+  background: linear-gradient(#577357, #575757) fixed;
+  background-repeat: no-repeat;
+  background-size: auto;
   color: #ffffff;
   max-width: 1366px;
   margin-left: auto;

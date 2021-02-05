@@ -15,7 +15,7 @@ export default {
     watch: {
         myData(nVal) {
 
-            this.options.scales.xAxes[0].ticks.max = nVal[1]
+            this.options.scales.xAxes[0].ticks.max = parseInt(nVal[1][0])
             this.chartData.datasets[0].data = nVal[0]
             this.renderChart(this.chartData, this.options)
         }

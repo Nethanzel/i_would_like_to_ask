@@ -3,16 +3,15 @@
         <img src="../assets/iWouldLike2.svg" alt="branding logo" id="logo">
         <h1><strong>I would like to ask...</strong></h1>
 
-        <p>"I would to ask" o en español "Quisiera preguntar", es un pequeño proyecto de codigo abierto (Open Source), el cual 
-          fue desarrollado por mi (<a href="https://facebook.com/natanaelabaad" target="_blank">Natanael Abad</a>) para poder reunir ciertos datos 
-          sobre seguridad informatica que puedan ser usados como indicadores de la incidencia de eventos negativos a nivel de seguridad 
-          informatica en Republica Dominicana.
+        <p>"I would to ask" o en español "Quisiera preguntar", es un pequeño proyecto de código abierto (Open Source), el cual 
+          fue desarrollado para realizar una investigación y reunir datos sobre el contexto de seguridad informática que permitan 
+          detectar indicadores de la incidencia de eventos negativos en el area en República Dominicana.
         </p>
 
         <p>
-          Mi intencion es mantener los datos publicos, a travez de esta misma aplicacion o por algun otro medio, ya que de nada 
-          valdria mantenerlos escondidos cuando la razon de este proyecto es esa, al no haber fuentes confiables que dispongan 
-          datos de forma publica, me fue necesario crear mi propia fuente de datos.
+          La intención es mantener los datos accesibles a todos, a travez de esta misma aplicacion o por algún otro medio, ya que de nada 
+          valdria mantenerlos escondidos cuando la razon de este proyecto se basa en que al no haber fuentes confiables que dispongan 
+          datos de forma pública, es necesario realizar una investigación y crear una fuente de datos.
         </p>
 
         <p>

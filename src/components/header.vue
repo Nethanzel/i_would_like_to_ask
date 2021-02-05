@@ -7,6 +7,13 @@
 
       <div id="headerBtns">
 
+        <router-link :to="{name: 'Help'}" class="link">
+          <div class="icon">
+            <img src="../assets/help.svg" alt="help" id="help"> 
+            <span class="tagEv"> Ayuda</span>
+          </div>
+        </router-link>
+
         <router-link :to="{name: 'About'}" class="link">
           <div class="icon">
             <img src="../assets/info.svg" alt="info" id="info"> 
@@ -51,7 +58,7 @@
     box-shadow: 0 7px 8px rgba(0, 0, 0, 0.658);
     position: fixed;
     top: 0;
-    background: #474747;
+    background: #577357;
     display: flex;
   }
 
@@ -83,6 +90,14 @@
 
   } 
   
+  #help {
+    max-height: 25px;
+    height: auto;
+    align-self: flex-end;
+    display: inline-block;
+    border-radius: 50%;
+  }
+
   #info {
     max-height: 25px;
     height: auto;
@@ -107,16 +122,26 @@
     background: #79c471;
   }
 
+  .icon:active #help {
+    background: #c4aa71;
+  }
+
   .icon:active {
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
-    background: #696969;
   }
 
   .tag {
     display: none;
+  }
+
+  .tagEv {
+    color: #fff;
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 14px;
   }
 
   #messageBand p {
@@ -124,17 +149,17 @@
   }
 
   #messageBand {
-  height: 0px;
-  width: 100%;
-  top: 9vh;
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: height cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
-  z-index: 1;
-  overflow: hidden;
-}
+    height: 0px;
+    width: 100%;
+    top: 9vh;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: height cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
+    z-index: 1;
+    overflow: hidden;
+  }
 }
 
 @media only screen and (min-width: 751px) {
@@ -144,7 +169,7 @@
     box-shadow: 0 7px 8px rgba(0, 0, 0, 0.658);
     position: fixed;
     top: 0;
-    background: #474747;
+    background: #577357;
     display: flex;
     max-width: 1366px;
 
@@ -178,6 +203,14 @@
 
   } 
   
+  #help {
+    max-height: 25px;
+    height: auto;
+    align-self: flex-end;
+    display: inline-block;
+    border-radius: 50%;
+  }
+
   #info {
     max-height: 25px;
     height: auto;
@@ -202,15 +235,25 @@
     background: #79c471;
   }
 
+  .icon:hover #help {
+    background: #c4aa71;
+  }
+
   .icon:hover {
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
-    background: #696969;
   }
 
   .tag {
+    color: #fff;
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 14px;
+  }
+
+  .tagEv {
     color: #fff;
     display: inline-block;
     margin-left: 5px;

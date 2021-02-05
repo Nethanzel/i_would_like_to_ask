@@ -1,22 +1,22 @@
 <template>
 
-    <div id="done">
-        <h1>¡Ya has colaborado! Gracias por tu ayuda.</h1>
-        <p>Si quieres seguir aportando, por favor pidele a tus amgios que tambien participen.</p>
+  <div id="done">
+    <h1>¡Ya has participado! Gracias por ayudar.</h1>
+    <p>Por favor pidele a tus amgios que tambien participen. <strong>Para salir solo tienes que cerrar la página</strong></p>
 
-        <p>Si quieres ver el progreso de la recoleccion de datos, <router-link :to="{name: 'Overview'}">aqui</router-link> 
-        podras ver un resumen.</p>
+    <p>Si quieres ver el progreso de la recoleccion de datos, <router-link :to="{name: 'Overview'}">aqui</router-link> 
+      podras ver un resumen.</p>
 
-        <p>Este proyecto es de código abierto (open source), puedes acceder al <a href="https://github.com/Nethanzel/i_would_like_to_ask" target="_blank">
-          repositorio en Github</a>. Si quieres recibir el resultado de la investigación, <router-link :to="{name: 'Report'}">
-          envia un reporte</router-link> con tu correo y especificando que quieres recibirlo. Recuerda que tambien puedes 
-          enviar algún reporte sobre tu experiencia al usar la aplicacion, ya sea por errores que presente o alguna idea/critica que
-          quieras aportar, será bien recibida.
-        </p>
+    <p>Este proyecto es de código abierto (open source), puedes acceder al <a href="https://github.com/Nethanzel/i_would_like_to_ask" target="_blank">
+      repositorio en Github</a>. <strong>Si quieres recibir el resultado de la investigación, <router-link :to="{name: 'Report'}">
+      envia un reporte</router-link> con tu correo y especificando que quieres recibirlo.</strong> Recuerda que tambien puedes 
+      enviar algún reporte sobre tu experiencia al usar la aplicación, ya sea por errores que presente o alguna idea/critica que
+      quieras aportar, será bien recibida.
+    </p>
 
-        <p>A continuacion podras ver todas tus respuestas:</p>
-        <div id="answersView"> </div>
-    </div>
+      <p>A continuacion podras ver todas tus respuestas:</p>
+    <div id="answersView"> </div>
+  </div>
 
 </template>
 
@@ -46,20 +46,6 @@ export default {
     name: "done",
     title: "I would like to ask...",
 
-    beforeCreate() {
-        let status = localStorage.getItem("iwouldliketoask")
-
-        if(status != null) {
-            status = JSON.parse(status)
-
-            if(status.stage == 0) {
-                this.$router.push({name: "Survey"})
-            }
-        } else {
-            this.$router.push({name: "Home"})
-        }
-    },
-
     methods: {
         loadAnswers() {
             let ansView = document.getElementById("answersView")
@@ -86,17 +72,17 @@ export default {
                     </div>
                 `
               }
-            } else ansView.innerHTML = "<h2>No hay respuestas para mostrar.</h2>"
+            } else {
+              ansView.innerHTML = "<h2>No hay respuestas para mostrar.</h2>"
+              this.$router.push({name: "Survey"})
+            }
         },
     },
 
     mounted() {
         this.loadAnswers()
     }
-
 }
-
-
 </script>
 
 <style>
@@ -106,6 +92,9 @@ export default {
     color: #79c471;
 }
 
+h3 {
+  text-align: center;
+}
 
 #done #answersView {
     border: 1px solid #ffffff8a;

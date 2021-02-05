@@ -245,7 +245,7 @@ export default {
                 if(e.includes("network error")) {
                     this.messageBox("Servidor fuera de alcance.", 2)
                 } else if (e.includes("code 401")) {
-                    this.messageBox("Atenticación requerida o invalida.", 0)
+                    this.messageBox("Autenticación requerida o invalida.", 0)
                 } else if (e.includes("code 404")) {
                     this.messageBox("Solictud invalida.", 0)
                 } else if(e.includes("code 500")) {
@@ -306,6 +306,7 @@ export default {
     },
 
     mounted () {
+        document.getElementById("svSpin").style.display = "block"
         this.loadQuestions()
     }
 }
@@ -339,7 +340,8 @@ export default {
         margin: 5px 10px 5px 10px;
         height: auto;
         max-height: 650px;
-
+        background: #c9c9c959;
+        box-shadow: 5px 5px 5px #0000008d;
         transition: .5s,;
     }
 
@@ -401,10 +403,6 @@ export default {
     }
 
     #answers {
-        /*display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;*/
         width: 100%;
     }
 
@@ -424,14 +422,15 @@ export default {
 
     #control {
         display: flex;
-        border: solid #888 2px;
+        border: solid #bbb 2px;
+        background: #c9c9c959;
         border-radius: 8px;
-        margin: 5px 10px 0 10px;
+        margin: 5px 5px 0 5px;
         height: auto;
         padding: 0 5px;
         min-width: 300px;
-
         transition: .5s;
+        box-shadow: 3px 5px 5px #0000008d;
     }
 
     #next {

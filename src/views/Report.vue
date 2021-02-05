@@ -1,16 +1,17 @@
 <template>
     <div class="report">
-      <h1>¡Ayudame a alcanzar la meta diciendome si la aplicacion tiene fallos!</h1>
-      <p class="advice">Puedes usar una de las dos opciones a continuacion: </p>
+      <h1>¡Ayudame a alcanzar la meta diciendome si la aplicación tiene fallos!</h1>
+      <p class="advice">Puedes usar una de las dos opciones a continuación: </p>
 
       <form id="reportColl">
-          <h2>Reportar fallos</h2>
-          <label for="donde">¿Donde falló la aplicación? (poner el link)</label> <input type="url" id="donde" v-model="where"> 
-          <label for="desc">Agrega una pequeña descripcion: </label>
+          <h2>Reportar errores</h2>
+          <label for="donde">¿Donde falló la aplicación? (puedes poner el link)</label> <input type="url" id="donde" v-model="where"> 
+          <label for="desc">Agrega una pequeña descripción: </label>
           <textarea cols="40" rows="5" id="desc" v-model="desc"></textarea>
           <label for="capt">Agrega alguna captura: </label> <input type="file" accept="image/*" id="capt">
           <div id="nav" v-on:click="sendReport()">
-              <span class="r_link">Enviar</span>
+              <span id="sendBtn" class="r_link">Enviar</span>
+              <img id="spin" src="../assets/spin.png">
           </div>
       </form>
 
@@ -24,7 +25,7 @@
           </div>
         </a>
 
-        <a href="">
+        <a href="https://t.me/iwouldliketoask" target="_blank">
           <div class="socialIcon tele">
             <img src="../assets/telegram.svg" alt="telegram">
             <p>Telegram</p>
@@ -56,18 +57,34 @@ export default {
   methods: {
 
     sendReport() {
+      let sendBtn = document.getElementById("sendBtn")
+      let spin = document.getElementById("spin")
+
+      spin.style.display = "inline"
+      sendBtn.style.display = "none"
+
       let token = this.clienttoken()
       let report = new FormData
 
       if((this.where == undefined || this.where == "") && (this.desc == undefined || this.desc == "") && this.capture == undefined) {
-        return this.messageBox("Primero agrega algun detalle.", 0)
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
+        return this.messageBox("Primero agrega algún detalle.", 0)
       } else if(this.where == undefined && (this.desc != undefined || this.capture != undefined)) {
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
         return this.messageBox("Debes especificar donde está el problema.", 2)
       } else if(this.where != undefined && ((this.desc == undefined || this.desc == "") && this.capture == undefined)) {
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
         return this.messageBox("Agrega alguna referencia.", 2)
       } else if(this.capture != undefined && this.where == undefined) {
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
         return this.messageBox("Debes especificar donde está el problema.", 2)
       } else if(this.desc != undefined && this.where == undefined) {
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
         return this.messageBox("Debes especificar donde está el problema.", 2)
       }
 
@@ -87,15 +104,19 @@ export default {
           this.capture = undefined
           this.desc = undefined
           this.where = undefined
+          spin.style.display = "none"
+          sendBtn.style.display = "inline"
         }
       })
 
       .catch((err) => {
+        spin.style.display = "none"
+        sendBtn.style.display = "inline"
         let e = String(err).toLowerCase()
         if(e.includes("network error")) {
           this.messageBox("Servidor fuera de alcance.", 2)
         } else if (e.includes("code 401")) {
-          this.messageBox("Atenticación requerida o invalida.", 0)
+          this.messageBox("Autenticación requerida o invalida.", 0)
         } else if (e.includes("code 404")) {
           this.messageBox("Solictud invalida.", 0)
         } else if(e.includes("code 500")) {
@@ -123,9 +144,26 @@ export default {
 
 <style scoped>
 
+
+@keyframes rotate360 {
+
+    to { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes rotate360 {
+
+    to { transform: rotate(360deg); }
+}
+
+#spin { 
+    animation: 1.5s rotate360 infinite linear; 
+    height: 40px;
+    display: none;
+}
+
 .socialIcon {
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 65px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -138,6 +176,7 @@ export default {
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
   transition: 1s;
+  cursor: pointer;
 }
 
 .socialIcon img{
@@ -148,6 +187,7 @@ export default {
 .socialIcon p {
   font-weight: bold;
   font-size: 15px;
+  cursor: pointer;
 }
 
 a {
@@ -200,6 +240,12 @@ input, textarea {
 
 .advice {
   text-align: center;
+}
+
+#reportColl {
+  background: transparent;
+  border: 2px solid #fff;
+  background: #c9c9c959;
 }
 
 @media only screen and (max-width: 750px) {
